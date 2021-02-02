@@ -1,0 +1,65 @@
+<button *ngIf="isUserLoggedIn()" type="button" class="btn btn-primary mr-2"  [routerLink]="['/currenciesRate']">Currencies Rate</button>
+<button *ngIf="isUserLoggedIn()" type="button" class="btn btn-primary mr-2"  (click)="logOut()">logout</button>
+<div class="container" style="max-width: 600px;background-color: white;">
+    <div *ngIf="isUserLoggedIn()">
+        <h1>Your profile</h1>
+    </div>
+    <div *ngIf="!isUserLoggedIn()">
+<form #loginform="ngForm" (ngSubmit)="loginUser()">
+    <small class="text-danger">{{msg}}</small>
+    <div class="form-group">
+      <label for="email">Email address:</label>
+      <input type="email" class="form-control" name="email" [(ngModel)]="user.email" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$" #email="ngModel"
+      [class.is-invalid]="email.invalid && email.touched"
+      >
+      <!-- <small class="text-danger" [class.d-none]="email.valid || email.untouched">Email is required field</small> -->
+        
+      <div *ngIf="email.errors && (email.invalid && email.touched)">
+          <small class="text-danger" *ngIf="email.errors.required">Email is required field</small>
+          <small class="text-danger" *ngIf="email.errors.pattern">Enter the valid value email</small>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" name="password" [(ngModel)]="user.password" required #password="ngModel"
+      [class.is-invalid]="password.invalid && password.touched"
+      >
+      <small class="text-danger" [class.d-none]="password.valid || password.untouched">password is required field</small>
+    </div>
+    <div class="checkbox">
+      <label><input type="checkbox"> Remember me</label>
+    </div>
+    <button [disabled]="loginform.form.invalid" type="submit" class="btn btn-info">Login</button>
+    <small class="float-right btextual" [routerLink]="['/registration']">New user? Register here</small>  
+</form>
+</div>
+  <!-- <small class="float-right" (click)="gotoregistration()">New user? Register here</small> -->
+  <br>
+</div>
+<script>
+var app = angular.module("springDemo", []);
+
+app.controller("AppCtrl", function($scope, $http){
+	
+	$scope.websites = [];
+	
+		$http.get('http://localhost:8083/api/currenciesRate').then(function (response) {
+	      $scope.getDivAvailable = true;
+	      $scope.websites = response.data;
+	    }, function error(response) {
+	      $scope.postResultMessage = "Error Status: " +  response.statusText;
+	    });
+
+//	$scope.websites = [{
+//		iconImageUrl: '',
+//	id: 'stackoverflow',
+//	website: 'stackoverflow.com',
+//	title: 'StackOverflow website',
+//	description: 'StackOverflow description'
+//	}];
+	
+	
+	
+});
+
+</script>
